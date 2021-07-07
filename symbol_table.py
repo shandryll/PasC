@@ -23,6 +23,12 @@ class SymbolTable:
     def addToken(self, lexema, token):
         self.dict_symbol[lexema] = token
 
+    def setTipo(self, lexema, tipo):
+        self.dict_symbol[lexema].setTipo(tipo)
+
+    def getTipo(self, lexema):
+        return self.dict_symbol[lexema].getTipo()
+
     def printTS(self):
         for k, t in (self.dict_symbol.items()):
             print(k, ":", t.toString())

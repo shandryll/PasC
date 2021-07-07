@@ -1,6 +1,0 @@
-if var < 100
-   read var
-else if var == 100
-   read var
-else
-   read 100

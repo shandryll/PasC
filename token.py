@@ -24,5 +24,11 @@ class Token:
     def setColuna(self, coluna):
         self.coluna = coluna
 
+    def getTipo(self):
+        return self.tipo
+
+    def setTipo(self, tipo):
+        self.tipo = tipo
+
     def toString(self):
-        return f'<{str(self.nome.name)}, {str(self.lexema)}>'
+        return "<" + str(self.nome.name) + ", \"" + str(self.lexema) + "\">"
