@@ -18,6 +18,10 @@ class SymbolTable:
 
     def getToken(self, lexema):
       token = self.dict_symbol.get(lexema)
+      if(token is None):
+          new_set = set(c.lower() for c in self.dict_symbol)
+          if(lexema.lower() in new_set):
+              token = self.dict_symbol.get(lexema.lower())
       return token
 
     def addToken(self, lexema, token):

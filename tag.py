@@ -31,8 +31,8 @@ class Tag(Enum):
     OP_ATRIB = 22
 
     # Symbols
-    SMB_OKE = 23
-    SMB_CKE = 24
+    SMB_OBC = 23
+    SMB_CBC = 24
     SMB_OPA = 25
     SMB_CPA = 26
     SMB_COM = 27

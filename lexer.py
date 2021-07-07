@@ -27,7 +27,7 @@ class Lexer():
     def sinalizaErroLexico(self, message):
         print("\n\n[Erro Lexico]: ", message, "\n")
         self.count_errors = self.count_errors + 1
-        if self.count_errors >= 5:
+        if self.count_errors >= 3:
             sys.exit(0)
 
     def retornaPonteiro(self):
@@ -98,29 +98,35 @@ class Lexer():
                     return None
 
             elif(estado == 2):
-                if(char == '/'):
+                if((len(lexema) == 0) and char == '/'):
+                    self.n_line += 1
+                    self.input_file.readline()
+                    estado = 1
+                    lexema = ''
+                    continue
+                if(char == '*'):
+                    lexema += char
                     estado = 20
-                elif(char == '*'):
-                    estado = 21
-                else:
+                if(len(lexema) == 0):
                     self.retornaPonteiro()
                     return Token(Tag.OP_DIV, "/", self.n_line, self.n_column - 1)
+
             elif(estado == 20):
+                if(char == ''):
+                    self.sinalizaErroLexico(f'Caractere inválido [{char}] na linha {str(self.n_line)} e coluna {str(self.n_column)}')
+                    self.contadorErros += 1
+                    continue
+                lexema += char
                 if(char == '\n'):
-                    estado = 1
-                    self.n_line += 1
                     self.n_column = 1
-            elif(estado == 21):
-                if(char == '*'):
-                    estado = 22
-                elif(char == '\n'):
                     self.n_line += 1
-                    estado = 20
-            elif(estado == 22):
                 if(char == '/'):
-                    estado = 1
-                else:
-                    estado = 21
+                    if('*/' not in lexema):
+                        continue
+                    else:
+                        estado = 1
+                        lexema = ''
+                        continue
 
             elif(estado == 3):
                 if(char == '='):
@@ -168,11 +174,11 @@ class Lexer():
 
             elif(estado == 12):
                 self.retornaPonteiro()
-                return Token(Tag.SMB_OKE, '{', self.n_line, self.n_column - 1)
+                return Token(Tag.SMB_OBC, '{', self.n_line, self.n_column - 1)
 
             elif(estado == 13):
                 self.retornaPonteiro()
-                return Token(Tag.SMB_CKE, '}', self.n_line, self.n_column - 1)
+                return Token(Tag.SMB_CBC, '}', self.n_line, self.n_column - 1)
 
             elif(estado == 14):
                 self.retornaPonteiro()
@@ -237,9 +243,6 @@ class Lexer():
                     self.retornaPonteiro()
                     token = self.symbol_table.getToken(lexema)
                     if(token is None):
-                        token = Token(Tag.ID, lexema, self.n_line, self.n_column-len(lexema))
+                        token = Token(Tag.ID, lexema, self.n_line, self.n_column - len(lexema))
                         self.symbol_table.addToken(lexema, token)
-                    else:
-                        token.setColuna(self.n_column-len(lexema))
-                        token.setLinha(self.n_line)
                     return token
